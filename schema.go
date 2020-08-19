@@ -14,7 +14,7 @@ var QueryType = graphql.NewObject(graphql.ObjectConfig{
 	Fields: graphql.Fields{
 		"users": {
 			Type: graphql.NewList(gqlmodels.User),
-			Description: "Get information about all users",
+			Description: "Get information about all users and their tasks",
 			Args: graphql.FieldConfigArgument{},
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				return controllers.GetAllUsers()
@@ -22,7 +22,7 @@ var QueryType = graphql.NewObject(graphql.ObjectConfig{
 		},
 		"user": {
 			Type: gqlmodels.User,
-			Description: "Get information about a specifically user using his name",
+			Description: "Get information about a specifically user and tasks using his name",
 			Args: graphql.FieldConfigArgument{
 				"name": &graphql.ArgumentConfig{
 					Description: "Name of the user to search",
