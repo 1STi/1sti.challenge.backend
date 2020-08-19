@@ -115,6 +115,85 @@ var MutationType = graphql.NewObject(graphql.ObjectConfig{
 				return nil, fmt.Errorf("you need to specify the \"id\" of the user")
 			},
 		},
+		"addTask": {
+			Type: graphql.Boolean,
+			Description: "Add a new task",
+			Args: graphql.FieldConfigArgument{
+				"title": &graphql.ArgumentConfig{
+					Description: "Short description about task",
+					Type: graphql.String,
+				},
+				"description": &graphql.ArgumentConfig{
+					Description: "More detailed description about task",
+					Type: graphql.String,
+				},
+				"idUser": &graphql.ArgumentConfig{
+					Description: "Id of the user who will execute this task",
+					Type: graphql.Int,
+				},
+				"idStatus": &graphql.ArgumentConfig{
+					Description: "Id of the current status from task, 1 for \"a fazer\", 2 for \"fazendo\", 3 for \"feito\"",
+					Type: graphql.Int,
+				},
+			},
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {				
+				if p.Args["title"] != nil && 
+				p.Args["description"] != nil &&
+				p.Args["idUser"] != nil &&
+				p.Args["idStatus"] != nil {
+					var newTask models.Task
+					newTask.Title = p.Args["title"].(string)
+					newTask.Description = p.Args["description"].(string)
+					newTask.IdUser = p.Args["idUser"].(int)
+					newTask.Status.Id = p.Args["idStatus"].(int)
+					return controllers.AddTask(newTask)
+				}
+				return false, fmt.Errorf("you need to specify all the information about the new task")
+			},
+		},
+		"updatetaskById": {
+			Type: graphql.Boolean,
+			Description: "Update information about a task",
+			Args: graphql.FieldConfigArgument{
+				"id": &graphql.ArgumentConfig{
+					Description: "Id of the task to update information",
+					Type: graphql.Int,
+				},
+				"title": &graphql.ArgumentConfig{
+					Description: "task title updated",
+					Type: graphql.String,
+				},
+				"description": &graphql.ArgumentConfig{
+					Description: "task description updated",
+					Type: graphql.String,
+				},
+				"idUser": &graphql.ArgumentConfig{
+					Description: "id of the user who will do the task updated",
+					Type: graphql.Int,
+				},
+				"idStatus": &graphql.ArgumentConfig{
+					Description: "id of the current status from task updated",
+					Type: graphql.Int,
+				},
+			},
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				if p.Args["id"] != nil &&
+				p.Args["title"] != nil && 
+				p.Args["description"] != nil &&
+				p.Args["idUser"] != nil &&
+				p.Args["idStatus"] != nil {
+					oldTaskId := p.Args["id"].(int)
+					var newTask models.Task
+					newTask.Title = p.Args["title"].(string)
+					newTask.Description = p.Args["description"].(string)
+					newTask.IdUser = p.Args["idUser"].(int)
+					newTask.Status.Id = p.Args["idStatus"].(int)
+					return controllers.UpdateTaskById(oldTaskId, newTask)
+				}
+				return nil, fmt.Errorf("you need to specify the \"id\" of the task AND the new task information")
+			},
+		},
+
 	},
 })
 

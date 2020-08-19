@@ -30,23 +30,6 @@ func GetAllUsers() (users []models.User, err error) {
 	return users, err
 }
 
-func getTasksFromUser(idUser int) ([]models.Task) {
-	rowsTasks, err := database.Db.Query(`select tbtasks.id, tbtasks.title, tbtasks.description, tbtasks.idstatus, tbstatus.description from tbtasks
-	join tbstatus on (tbtasks.idstatus = tbstatus.id)
-	where iduser=$1;`, idUser)
-	if err != nil { log.Fatal(err) }
-
-	var tasks []models.Task
-	var task models.Task
-	var status models.Status
-	for rowsTasks.Next() {
-		rowsTasks.Scan(&task.Id, &task.Title, &task.Description, &status.Id, &status.Description)
-		task.Status = status
-		tasks = append(tasks, task)
-	}
-	return tasks
-}
-
 func AddUser(newUser models.User) (ok bool, err error){
 	err = database.Db.QueryRow(`INSERT INTO tbusers 
 	VALUES(DEFAULT, $1, $2)
