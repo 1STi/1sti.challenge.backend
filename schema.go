@@ -98,25 +98,8 @@ var MutationType = graphql.NewObject(graphql.ObjectConfig{
 				return nil, fmt.Errorf("you need to specify the \"id\" of the user AND the new user information")
 			},
 		},
-		"deleteUserById": {
-			Type: graphql.Boolean,
-			Description: "Delete all information about a user TO ETERNITY",
-			Args: graphql.FieldConfigArgument{
-				"id": &graphql.ArgumentConfig{
-					Description: "Id of the user to delete information",
-					Type: graphql.Int,
-				},
-			},
-			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-				if p.Args["id"] != nil {
-					id := p.Args["id"].(int)
-					return controllers.DeleteUserById(id)
-				}
-				return nil, fmt.Errorf("you need to specify the \"id\" of the user")
-			},
-		},
 		"addTask": {
-			Type: graphql.Boolean,
+			Type: graphql.Int,
 			Description: "Add a new task",
 			Args: graphql.FieldConfigArgument{
 				"title": &graphql.ArgumentConfig{
