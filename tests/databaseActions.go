@@ -34,7 +34,8 @@ func dropTables(){
 }
 
 func ClearTables(){
-	database.Db.QueryRow(`DELETE FROM tbtasks, tbusers, tbstatus;`)
+	database.Db.QueryRow(`DELETE FROM tbtasks;`)
+	database.Db.QueryRow(`DELETE FROM tbusers;`)
 }
 
 func setDefaulTableValues(){

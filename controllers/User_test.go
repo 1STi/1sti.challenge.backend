@@ -7,6 +7,7 @@ import (
 )
 
 func TestAddUser(t *testing.T) {
+	tests.ClearTables()
 	got := controllers.AddUser(tests.User)
 	want := 2
 	
@@ -36,7 +37,7 @@ func TestGetUserByName(t *testing.T) {
 
 func TestGetAllUsers(t *testing.T) {
 	got := controllers.GetAllUsers()
-	want := 2
+	want := 1
 
 	if (len(got) != want) { 
 		t.Errorf("Wrong information from this user: Want: %v, got: %v", want, len(got)) 
@@ -52,8 +53,8 @@ func TestUpdateWrongUserById(t *testing.T) {
 
 
 func TestUpdateUserById(t *testing.T) {
-	got := controllers.UpdateUserById(1, tests.User)
-	want := 1
+	got := controllers.UpdateUserById(2, tests.User)
+	want := 2
 	
 	if(got != want){ t.Errorf("Want: %d, got: %d", want, got) }
 }

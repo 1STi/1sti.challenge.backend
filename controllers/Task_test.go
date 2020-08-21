@@ -32,6 +32,4 @@ func TestUpdateTask(t *testing.T) {
 	want := 1
 
 	if(got != want){ t.Errorf("Want: %d, got: %d", want, got) }
-
-	tests.ClearTables()
 }
