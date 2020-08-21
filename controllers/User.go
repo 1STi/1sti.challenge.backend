@@ -1,23 +1,20 @@
 package controllers
 
 import (
-	"log"
 	"github.com/YtaloWill/1sti.challenge.backend/models"
 	"github.com/YtaloWill/1sti.challenge.backend/database"
 )
 
-func GetUserByName(userName string) (user models.User, err error){
-	err = database.Db.QueryRow(`select id, name, email from tbusers where name=$1;`, userName).Scan(&user.Id, &user.Name, &user.Email)
-	if err != nil { log.Fatal(err) }
+func GetUserByName(userName string) (user models.User){
+	_ = database.Db.QueryRow(`select id, name, email from tbusers where name=$1;`, userName).Scan(&user.Id, &user.Name, &user.Email)
 
 	user.Tasks = getTasksFromUser(user.Id)
 
-	return user, err
+	return user
 }
 
-func GetAllUsers() (users []models.User, err error) {
-	rowsUsers, err := database.Db.Query("SELECT id, name, email FROM tbusers;")
-	if err != nil { log.Fatal(err) }
+func GetAllUsers() (users []models.User) {
+	rowsUsers, _ := database.Db.Query("SELECT id, name, email FROM tbusers;")
 
 	for rowsUsers.Next() {
 		var user models.User
@@ -27,26 +24,20 @@ func GetAllUsers() (users []models.User, err error) {
 		users = append(users, user)
 	}
 
-	return users, err
+	return users
 }
 
-func AddUser(newUser models.User) (ok bool, err error){
-	err = database.Db.QueryRow(`INSERT INTO tbusers 
+func AddUser(newUser models.User) (id int){
+	_ = database.Db.QueryRow(`INSERT INTO tbusers 
 	VALUES(DEFAULT, $1, $2)
-	RETURNING 1;`, newUser.Name, newUser.Email).Scan(&ok)
-	return ok, err
+	RETURNING id;`, newUser.Name, newUser.Email).Scan(&id)
+	return id
 }
 
-func UpdateUserById(oldUserId int, newUser models.User) (ok bool, err error){
-	err = database.Db.QueryRow(`UPDATE tbusers 
+func UpdateUserById(oldUserId int, newUser models.User) (id int){
+	_ = database.Db.QueryRow(`UPDATE tbusers 
 	SET name=$1, email=$2
 	WHERE id=$3
-	RETURNING 1;`, newUser.Name, newUser.Email, oldUserId).Scan(&ok)
-	return ok, err
-}
-
-func DeleteUserById(deleteUserId int) (ok bool, err error){
-	err = database.Db.QueryRow(`DELETE FROM tbusers WHERE id=$1
-	RETURNING 1;`, deleteUserId).Scan(&ok)
-	return ok, err
+	RETURNING id;`, newUser.Name, newUser.Email, oldUserId).Scan(&id)
+	return id
 }

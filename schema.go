@@ -17,7 +17,7 @@ var QueryType = graphql.NewObject(graphql.ObjectConfig{
 			Description: "Get information about all users and their tasks",
 			Args: graphql.FieldConfigArgument{},
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-				return controllers.GetAllUsers()
+				return controllers.GetAllUsers(), nil
 			},
 		},
 		"user": {
@@ -32,7 +32,7 @@ var QueryType = graphql.NewObject(graphql.ObjectConfig{
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				if p.Args["name"] != nil {
 					name := p.Args["name"].(string)
-					return controllers.GetUserByName(name)
+					return controllers.GetUserByName(name), nil
 				}
 
 				return nil, fmt.Errorf("you need to specify \"name\" of the user")
@@ -46,7 +46,7 @@ var MutationType = graphql.NewObject(graphql.ObjectConfig{
 	Description: "Manipulate all information about users and receive a boolean confirmation if mutation done",
 	Fields: graphql.Fields{
 		"addUser": {
-			Type: graphql.Boolean,
+			Type: graphql.Int,
 			Description: "Add a new user",
 			Args: graphql.FieldConfigArgument{
 				"name": &graphql.ArgumentConfig{
@@ -63,13 +63,13 @@ var MutationType = graphql.NewObject(graphql.ObjectConfig{
 					var newUser models.User
 					newUser.Name = p.Args["name"].(string)
 					newUser.Email = p.Args["email"].(string)
-					return controllers.AddUser(newUser)
+					return controllers.AddUser(newUser), nil
 				}
 				return false, fmt.Errorf("you need to specify all the information about the new user")
 			},
 		},
 		"updateUserById": {
-			Type: graphql.Boolean,
+			Type: graphql.Int,
 			Description: "Update information about a user",
 			Args: graphql.FieldConfigArgument{
 				"id": &graphql.ArgumentConfig{
@@ -93,7 +93,7 @@ var MutationType = graphql.NewObject(graphql.ObjectConfig{
 					var updatedUser models.User
 					updatedUser.Name = p.Args["name"].(string)
 					updatedUser.Email = p.Args["email"].(string)
-					return controllers.UpdateUserById(id, updatedUser)
+					return controllers.UpdateUserById(id, updatedUser), nil
 				}
 				return nil, fmt.Errorf("you need to specify the \"id\" of the user AND the new user information")
 			},
@@ -146,13 +146,13 @@ var MutationType = graphql.NewObject(graphql.ObjectConfig{
 					newTask.Description = p.Args["description"].(string)
 					newTask.IdUser = p.Args["idUser"].(int)
 					newTask.Status.Id = p.Args["idStatus"].(int)
-					return controllers.AddTask(newTask)
+					return controllers.AddTask(newTask), nil
 				}
 				return false, fmt.Errorf("you need to specify all the information about the new task")
 			},
 		},
-		"updatetaskById": {
-			Type: graphql.Boolean,
+		"updateTaskById": {
+			Type: graphql.Int,
 			Description: "Update information about a task",
 			Args: graphql.FieldConfigArgument{
 				"id": &graphql.ArgumentConfig{
@@ -188,7 +188,7 @@ var MutationType = graphql.NewObject(graphql.ObjectConfig{
 					newTask.Description = p.Args["description"].(string)
 					newTask.IdUser = p.Args["idUser"].(int)
 					newTask.Status.Id = p.Args["idStatus"].(int)
-					return controllers.UpdateTaskById(oldTaskId, newTask)
+					return controllers.UpdateTaskById(oldTaskId, newTask), nil
 				}
 				return nil, fmt.Errorf("you need to specify the \"id\" of the task AND the new task information")
 			},
