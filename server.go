@@ -1,27 +1,30 @@
 package main
 
 import (
-	"os"
+	"github.com/YtaloWill/1sti.challenge.backend/database"
+	"github.com/graphql-go/handler"
+	"github.com/joho/godotenv"
 	"log"
 	"net/http"
-	"github.com/joho/godotenv"
-	"github.com/graphql-go/handler"
-	"github.com/YtaloWill/1sti.challenge.backend/database"
+	"os"
 )
 
-
-func main(){
+func main() {
 
 	database.ConnectDb()
 	defer database.Db.Close()
 
 	// Load Schemas
 	schema, err := GetSchema()
-	if err != nil {	log.Fatal("error compiling schema: ", err) }
+	if err != nil {
+		log.Fatal("error compiling schema: ", err)
+	}
 
 	err = godotenv.Load()
-	if err != nil { log.Fatal("Error loading .env file") }
-  
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
 	port := os.Getenv("PORT")
 
 	h := handler.New(&handler.Config{
@@ -36,5 +39,3 @@ func main(){
 
 	http.ListenAndServe(":"+port, nil)
 }
-
-
