@@ -1,20 +1,92 @@
 # Desafio 1STi Backend
 
-Criar uma api graphql de gerenciamento de tarefas (aka Todo), com as seguintes queries:
-- Registrar usuário (e-mail, nome)
-- Listar tarefas por usuário
-- Criar tarefa a fazer para o usuário cadastrado
-- Editar uma determinada tarefa
-- Listar tarefas do usuário cadastrado
-- Mudar status da tarefa (a fazer, fazendo e feito)
+## Technologies used
 
-## Requisitos
-- Servidor GraphQL
-- Tenha algum tipo de teste (unit, bdd, etc)
-- Código limpo, documentado e organizado
-- Qualquer banco de dados (relacional, nosql ou graph)
+- Go Programming Language
+- Graphql
+- PostgreSQL
 
-## Plus (Não obrigatório)
-- Servidor GraphQL em Golang
-- Usar banco de dados graph (Ex: TinkerPop)
-- Usar algum CI para gerar binário (Ex: CircleCI)
+## Database diagram
+
+![database diagram](./db-diagram.png)
+
+## Graphql Schemas
+
+```graphql
+query{
+  users{
+    id
+    name
+    email
+    tasks{
+      id
+      title
+      description
+      status{
+        id
+        description
+      }
+    }
+  }
+}
+
+query{
+  user(name:$name){
+    id
+    name
+    email
+    tasks{
+      id
+      title
+      description
+      status{
+        id
+        description
+      }
+    }
+  }
+}
+
+mutation{
+  addUser(name:$name, email:$email)
+}
+
+mutation{
+  addTask(title:$title, description:$description)
+}
+
+mutation{
+  updateUserById(id:$id name:$name, email:$email)
+}
+
+mutation{
+  updateTaskById(id:$id title:$title, description:$description, idUser:$idUser, idStatus:$idStatus)
+}
+```
+
+For a more detailed (and pretty) information about querys, use Graphiql in localhost:yourport/graphql or read `./schema.go` file
+
+## Running the project
+
+1. Download the project with `git clone` or using `go get github.com/YtaloWill/1sti.challenge.backend`
+
+2. In source, make a .env file or export your environments variables like the example:
+
+```env
+    DBUSER=youruserhere
+    DBNAME=nameofthedatabase
+    DBPASS=yourpassword
+    PORT=porttorunserver
+```
+
+3. Be sure your database has the tables
+
+4. Run the project with `go run .`
+    
+    - _Note: The Graphiql (playground) is turned on_
+
+## Running tests
+
+Just use `go tests ./...`
+
+_If you are using a .env file, uncomment file line in ./database/Connect.go#L15 and comment 14 line_
