@@ -1,6 +1,6 @@
 # Desafio 1STi Backend
 
-Criar uma api rest ou graphql de gerenciamento de tarefas (aka Todo), com as seguintes métodos:
+Criar uma api rest ou graphql de gerenciamento de tarefas (aka Todo), com seguintes métodos:
 - Registrar usuário (e-mail, nome)
 - Listar tarefas por usuário
 - Criar tarefa a fazer para o usuário cadastrado
